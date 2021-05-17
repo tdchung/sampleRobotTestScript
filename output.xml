@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 4.0.1 (Python 3.9.4 on win32)" generated="20210517 10:22:11.644" rpa="false" schemaversion="2">
+<suite id="s1" name="WIDS email2Ticket" source="C:\Working\WIDS\QA\sampleRobotTestScript\WIDS_Test_Script\WIDS_email2Ticket.robot">
+<kw name="Create Session" library="RequestsLibrary" type="SETUP">
+<arg>request_endpoint</arg>
+<arg>${SERVER}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<msg timestamp="20210517 10:22:12.301" level="INFO">Creating Session using : alias=request_endpoint, url=http://20.62.231.182:8080, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<status status="PASS" starttime="20210517 10:22:12.299" endtime="20210517 10:22:12.301"/>
+</kw>
+<test id="s1-t1" name="WIDS - 1 - Email to Ticket - Normal case - 1">
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${data1}</var>
+<arg>emailbody=SERVICE REQUEST_SOFTWARE_NOT FOUND_INSTALLATION</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20210517 10:22:12.306" level="INFO">${data1} = {'emailbody': 'SERVICE REQUEST_SOFTWARE_NOT FOUND_INSTALLATION'}</msg>
+<status status="PASS" starttime="20210517 10:22:12.304" endtime="20210517 10:22:12.307"/>
+</kw>
+<kw name="Post On Session" library="RequestsLibrary">
+<var>${resp}</var>
+<arg>request_endpoint</arg>
+<arg>/meta/general/1.0/getclassified</arg>
+<arg>json=${data1}</arg>
+<arg>expected_status=anything</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<msg timestamp="20210517 10:22:17.915" level="INFO">POST Request : url=http://20.62.231.182:8080/meta/general/1.0/getclassified 
+ path_url=/meta/general/1.0/getclassified 
+ headers={'User-Agent': 'python-requests/2.25.1', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '64', 'Content-Type': 'application/json'} 
+ body=b'{"emailbody": "SERVICE REQUEST_SOFTWARE_NOT FOUND_INSTALLATION"}' 
+ </msg>
+<msg timestamp="20210517 10:22:17.915" level="INFO">POST Response : url=http://20.62.231.182:8080/meta/general/1.0/getclassified 
+ status=200, reason=OK 
+ headers={'Server': 'nginx', 'Date': 'Mon, 17 May 2021 03:22:03 GMT', 'Content-Type': 'application/json', 'Content-Length': '216', 'Connection': 'keep-alive'} 
+ body={"1":{"Action_class_name":"SERVICE REQUEST_SOFTWARE_NOT FOUND_INSTALLATION","EmailBody":"SERVICE REQUEST SOFTWARE NOT FOUND INSTALLATION","L1":"SERVICE REQUEST","L2":"SOFTWARE","L3":"NOT FOUND","L4":"INSTALLATION"}}
+ 
+ </msg>
+<msg timestamp="20210517 10:22:17.915" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<status status="PASS" starttime="20210517 10:22:12.308" endtime="20210517 10:22:17.915"/>
+</kw>
+<kw name="Status Should Be" library="RequestsLibrary">
+<arg>200</arg>
+<arg>${resp}</arg>
+<doc>Fails if response status code is different than the expected.</doc>
+<status status="PASS" starttime="20210517 10:22:17.917" endtime="20210517 10:22:17.917"/>
+</kw>
+<kw name="Validate Output Should Contain Keys" library="WISD_Libraries">
+<arg>${resp.json()['1']}</arg>
+<arg>Action_class_name</arg>
+<arg>EmailBody</arg>
+<arg>L1</arg>
+<arg>L2</arg>
+<arg>L3</arg>
+<arg>L4</arg>
+<status status="PASS" starttime="20210517 10:22:17.918" endtime="20210517 10:22:17.919"/>
+</kw>
+<doc>Test to validate API is working in normal case. Input data array = 1</doc>
+<tag>Ready</tag>
+<status status="PASS" starttime="20210517 10:22:12.301" endtime="20210517 10:22:17.919"/>
+</test>
+<test id="s1-t2" name="WIDS - 1 - Email to Ticket - Normal case - 2">
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${data1}</var>
+<arg>emailbody=SERVICE REQUEST_SOFTWARE_NOT FOUND_INSTALLATION</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20210517 10:22:17.923" level="INFO">${data1} = {'emailbody': 'SERVICE REQUEST_SOFTWARE_NOT FOUND_INSTALLATION'}</msg>
+<status status="PASS" starttime="20210517 10:22:17.922" endtime="20210517 10:22:17.923"/>
+</kw>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${data2}</var>
+<arg>emailbody=test ttest</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20210517 10:22:17.924" level="INFO">${data2} = {'emailbody': 'test ttest'}</msg>
+<status status="PASS" starttime="20210517 10:22:17.923" endtime="20210517 10:22:17.924"/>
+</kw>
+<kw name="Create Array Body Input" library="WISD_Libraries">
+<var>${inputbody}</var>
+<arg>${data1}</arg>
+<arg>${data2}</arg>
+<doc>test</doc>
+<msg timestamp="20210517 10:22:17.925" level="INFO">${inputbody} = [{'emailbody': 'SERVICE REQUEST_SOFTWARE_NOT FOUND_INSTALLATION'}, {'emailbody': 'test ttest'}]</msg>
+<status status="PASS" starttime="20210517 10:22:17.924" endtime="20210517 10:22:17.925"/>
+</kw>
+<kw name="Post On Session" library="RequestsLibrary">
+<var>${resp}</var>
+<arg>request_endpoint</arg>
+<arg>/meta/general/1.0/getclassified</arg>
+<arg>json=${inputbody}</arg>
+<arg>expected_status=anything</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<msg timestamp="20210517 10:22:23.200" level="INFO">POST Request : url=http://20.62.231.182:8080/meta/general/1.0/getclassified 
+ path_url=/meta/general/1.0/getclassified 
+ headers={'User-Agent': 'python-requests/2.25.1', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '95', 'Content-Type': 'application/json'} 
+ body=b'[{"emailbody": "SERVICE REQUEST_SOFTWARE_NOT FOUND_INSTALLATION"}, {"emailbody": "test ttest"}]' 
+ </msg>
+<msg timestamp="20210517 10:22:23.200" level="INFO">POST Response : url=http://20.62.231.182:8080/meta/general/1.0/getclassified 
+ status=200, reason=OK 
+ headers={'Server': 'nginx', 'Date': 'Mon, 17 May 2021 03:22:08 GMT', 'Content-Type': 'application/json', 'Content-Length': '365', 'Connection': 'keep-alive'} 
+ body={"1":{"Action_class_name":"SERVICE REQUEST_SOFTWARE_NOT FOUND_INSTALLATION","EmailBody":"SERVICE REQUEST SOFTWARE NOT FOUND INSTALLATION","L1":"SERVICE REQUEST","L2":"SOFTWARE","L3":"NOT FOUND","L4":"INSTALLATION"},"2":{"Action_class_name":"INCIDENT_SOFTWARE_TESTING_TESTING","EmailBody":"TEST TTEST","L1":"INCIDENT","L2":"SOFTWARE","L3":"TESTING","L4":"TESTING"}}
+ 
+ </msg>
+<msg timestamp="20210517 10:22:23.200" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<status status="PASS" starttime="20210517 10:22:17.925" endtime="20210517 10:22:23.201"/>
+</kw>
+<kw name="Status Should Be" library="RequestsLibrary">
+<arg>200</arg>
+<arg>${resp}</arg>
+<doc>Fails if response status code is different than the expected.</doc>
+<status status="PASS" starttime="20210517 10:22:23.201" endtime="20210517 10:22:23.202"/>
+</kw>
+<kw name="Validate Length Of Response" library="WISD_Libraries">
+<arg>${resp.json()}</arg>
+<arg>2</arg>
+<status status="PASS" starttime="20210517 10:22:23.203" endtime="20210517 10:22:23.204"/>
+</kw>
+<kw name="Validate Array Response Contain Keys" library="WISD_Libraries">
+<arg>${resp.json()}</arg>
+<arg>Action_class_name</arg>
+<arg>EmailBody</arg>
+<arg>L1</arg>
+<arg>L2</arg>
+<arg>L3</arg>
+<arg>L4</arg>
+<status status="PASS" starttime="20210517 10:22:23.204" endtime="20210517 10:22:23.205"/>
+</kw>
+<doc>Test to validate API is working in normal case. Input data array more than 1</doc>
+<tag>Ready</tag>
+<status status="PASS" starttime="20210517 10:22:17.921" endtime="20210517 10:22:23.206"/>
+</test>
+<test id="s1-t3" name="WIDS - 4 - Email to Ticket - Verify API behavior if the length of input parameters are not valid - 1">
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${data1}</var>
+<arg>emailbody=</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20210517 10:22:23.208" level="INFO">${data1} = {'emailbody': ''}</msg>
+<status status="PASS" starttime="20210517 10:22:23.208" endtime="20210517 10:22:23.208"/>
+</kw>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${data2}</var>
+<arg>emailbody=test ttest</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20210517 10:22:23.210" level="INFO">${data2} = {'emailbody': 'test ttest'}</msg>
+<status status="PASS" starttime="20210517 10:22:23.209" endtime="20210517 10:22:23.210"/>
+</kw>
+<kw name="Create Array Body Input" library="WISD_Libraries">
+<var>${inputbody}</var>
+<arg>${data1}</arg>
+<arg>${data2}</arg>
+<doc>test</doc>
+<msg timestamp="20210517 10:22:23.211" level="INFO">${inputbody} = [{'emailbody': ''}, {'emailbody': 'test ttest'}]</msg>
+<status status="PASS" starttime="20210517 10:22:23.210" endtime="20210517 10:22:23.211"/>
+</kw>
+<kw name="Post On Session" library="RequestsLibrary">
+<var>${resp}</var>
+<arg>request_endpoint</arg>
+<arg>/meta/general/1.0/getclassified</arg>
+<arg>json=${inputbody}</arg>
+<arg>expected_status=anything</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<msg timestamp="20210517 10:22:23.455" level="INFO">POST Request : url=http://20.62.231.182:8080/meta/general/1.0/getclassified 
+ path_url=/meta/general/1.0/getclassified 
+ headers={'User-Agent': 'python-requests/2.25.1', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '48', 'Content-Type': 'application/json'} 
+ body=b'[{"emailbody": ""}, {"emailbody": "test ttest"}]' 
+ </msg>
+<msg timestamp="20210517 10:22:23.455" level="INFO">POST Response : url=http://20.62.231.182:8080/meta/general/1.0/getclassified 
+ status=500, reason=INTERNAL SERVER ERROR 
+ headers={'Server': 'nginx', 'Date': 'Mon, 17 May 2021 03:22:08 GMT', 'Content-Type': 'application/json', 'Content-Length': '276', 'Connection': 'keep-alive'} 
+ body={"Status":"Error","entity":{"Exception":"Exception is &lt;class 'Exception'&gt; and its inner value is list index out of range","Hint":"Please check the internal code / logs.","Message":"A general error has occured in the API call definition code","Title":"Internal server issue"}}
+ 
+ </msg>
+<msg timestamp="20210517 10:22:23.455" level="INFO">${resp} = &lt;Response [500]&gt;</msg>
+<status status="PASS" starttime="20210517 10:22:23.212" endtime="20210517 10:22:23.455"/>
+</kw>
+<kw name="Status Should Be" library="RequestsLibrary">
+<arg>200</arg>
+<arg>${resp}</arg>
+<doc>Fails if response status code is different than the expected.</doc>
+<msg timestamp="20210517 10:22:23.515" level="FAIL">Url: http://20.62.231.182:8080/meta/general/1.0/getclassified Expected status: 500 != 200</msg>
+<status status="FAIL" starttime="20210517 10:22:23.456" endtime="20210517 10:22:23.515"/>
+</kw>
+<kw name="Validate Length Of Response" library="WISD_Libraries">
+<arg>${resp.json()}</arg>
+<arg>2</arg>
+<status status="NOT RUN" starttime="20210517 10:22:23.516" endtime="20210517 10:22:23.517"/>
+</kw>
+<kw name="Validate Array Response Contain Keys" library="WISD_Libraries">
+<arg>${resp.json()}</arg>
+<arg>Action_class_name</arg>
+<arg>EmailBody</arg>
+<arg>L1</arg>
+<arg>L2</arg>
+<arg>L3</arg>
+<arg>L4</arg>
+<status status="NOT RUN" starttime="20210517 10:22:23.517" endtime="20210517 10:22:23.517"/>
+</kw>
+<doc>Verify API behavior if the length of input parameters are not valid - data is empty</doc>
+<tag>know_issue</tag>
+<tag>Ready</tag>
+<status status="FAIL" starttime="20210517 10:22:23.207" endtime="20210517 10:22:23.518">Url: http://20.62.231.182:8080/meta/general/1.0/getclassified Expected status: 500 != 200</status>
+</test>
+<doc>The test set to cover WIDS API: email to ticket
+Ticket ID: WIDS-307, WIDS-342</doc>
+<status status="FAIL" starttime="20210517 10:22:11.649" endtime="20210517 10:22:23.520"/>
+</suite>
+<statistics>
+<total>
+<stat pass="2" fail="1" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="0" fail="1" skip="0">know_issue</stat>
+<stat pass="2" fail="1" skip="0">Ready</stat>
+</tag>
+<suite>
+<stat pass="2" fail="1" skip="0" id="s1" name="WIDS email2Ticket">WIDS email2Ticket</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
